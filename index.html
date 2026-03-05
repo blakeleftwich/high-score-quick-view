@@ -34,20 +34,27 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;
   background:linear-gradient(180deg,#fff 0%,#ffd700 50%,#ff8c00 100%);
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
   letter-spacing:0.06em;flex:1;text-align:center}
-.search-toggle{background:none;border:none;cursor:pointer;padding:0.3rem;opacity:0.35;
+.search-toggle{background:none;border:none;cursor:pointer;padding:0.3rem;opacity:1;
   transition:opacity 0.2s;flex-shrink:0}
-.search-toggle:hover,.search-toggle.active{opacity:1}
 .search-toggle svg{width:clamp(1.2rem,4vw,1.6rem);height:clamp(1.2rem,4vw,1.6rem);display:block}
 
 /* Search row */
 .search-row{display:none;align-items:center;gap:0.5rem}
 .scroll-header.search-open .search-row{display:flex}
-.scroll-header.search-open .search-toggle{opacity:0.7}
+.scroll-header.search-open .search-toggle{opacity:1}
 .search-row input{flex:1;min-width:0;background:rgba(255,140,0,0.1);border:1px solid rgba(255,140,0,0.35);
   border-radius:999px;color:var(--text-cream);font-family:'Nunito',sans-serif;font-size:clamp(1.5rem,5.5vw,2.2rem);
   padding:0.2rem 0.8rem;outline:none;transition:border-color 0.2s;font-weight:700}
 .search-row input:focus{border-color:rgba(255,179,71,0.6)}
 .search-row input::placeholder{color:rgba(255,179,71,0.4);font-weight:400}
+.search-wrap{position:relative;flex:1;min-width:0}
+.search-wrap input{width:100%;padding-right:2.2rem}
+.search-clear{display:none;position:absolute;right:0.5rem;top:50%;transform:translateY(-50%);
+  background:none;border:none;color:rgba(255,179,71,0.5);font-family:'Nunito',sans-serif;
+  font-size:clamp(1.3rem,4.5vw,1.8rem);font-weight:700;cursor:pointer;padding:0.1rem 0.3rem;
+  line-height:1;transition:color 0.2s}
+.search-clear:hover{color:var(--text-cream)}
+.search-wrap input:not(:placeholder-shown)~.search-clear{display:block}
 
 /* Chips row */
 .chips-row{display:none;gap:clamp(0.5rem,2vw,0.8rem);padding-top:clamp(0.3rem,1vh,0.5rem);
@@ -108,23 +115,22 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;
 .scroll-card.special-sub-row .s-game.s-note{color:var(--neon-amber);font-family:'Google Sans Flex','Russo One',sans-serif;font-weight:bold}
 
 /* Footer */
-.scroll-footer{width:100%;text-align:center;padding:clamp(0.4rem,1vh,1rem);
+.scroll-footer{width:100%;text-align:center;padding:clamp(0.4rem,1vh,1rem);padding-top:clamp(1rem,3vh,2rem);
   background:linear-gradient(to top,rgba(10,5,0,0.99),rgba(10,5,0,0.85),transparent);
   position:sticky;bottom:0;z-index:10}
 
 .no-results{text-align:center;padding:2rem 1rem;color:rgba(255,179,71,0.35);font-family:'VT323',monospace;font-size:1rem}
 
 /* Player stats */
-.player-stats{display:none;max-width:950px;margin:0.5rem auto 0;
-  padding:clamp(0.4rem,1vh,0.6rem) clamp(0.5rem,2vw,2rem);
-  background:rgba(255,140,0,0.1);border:1px solid rgba(255,140,0,0.35);border-radius:8px;
-  margin-left:clamp(0.5rem,2vw,2rem);margin-right:clamp(0.5rem,2vw,2rem)}
+.player-stats{display:none;max-width:600px;margin:clamp(1rem,3vh,2rem) auto;
+  padding:clamp(0.8rem,2vh,1.4rem) clamp(1rem,3vw,2rem);
+  background:rgba(255,140,0,0.1);border:1px solid rgba(255,140,0,0.35);border-radius:8px}
 .player-stats.visible{display:block}
 .player-stats .stat-name{font-family:'Google Sans Flex','Russo One',sans-serif;font-size:clamp(1.4rem,5.5vw,2.4rem);
   color:var(--neon-green);text-shadow:0 0 6px rgba(57,255,20,0.2);font-weight:bold;
   padding-bottom:0.2rem}
 .player-stats .stat-row{display:flex;justify-content:space-between;align-items:baseline;
-  padding:0.15rem 0;line-height:1.3}
+  padding:0.3rem 0;line-height:1.3}
 .player-stats .stat-label{font-family:'Google Sans Flex','Russo One',sans-serif;font-size:clamp(1rem,3.8vw,1.6rem);
   color:var(--neon-yellow);text-shadow:0 0 4px rgba(255,215,0,0.15)}
 .player-stats .stat-value{font-family:'Google Sans Flex','Russo One',sans-serif;font-weight:bold;
@@ -134,13 +140,14 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;
 /* Status */
 .status-bar{display:flex;align-items:center;justify-content:space-between;
   max-width:950px;margin:0 auto;padding:0.5rem clamp(0.5rem,2vw,2rem) 1rem}
-.status{color:rgba(255,179,71,0.3);font-size:clamp(1.4rem,4.5vw,2rem);
-  font-family:'Google Sans Flex',sans-serif;font-weight:400;letter-spacing:0.02em}
-.back-to-top{background:none;border:1px solid rgba(255,140,0,0.2);border-radius:4px;
-  color:rgba(255,179,71,0.3);font-family:'Google Sans Flex',sans-serif;font-weight:400;
-  font-size:clamp(1rem,3vw,1.2rem);padding:0.15rem 0.5rem;cursor:pointer;
-  transition:all 0.2s;white-space:nowrap}
-.back-to-top:hover{color:rgba(255,179,71,0.6);border-color:rgba(255,140,0,0.4)}
+.status{color:var(--text-cream);opacity:0.7;font-size:clamp(1rem,3.5vw,1.25rem);
+  font-family:'Nunito',sans-serif;font-weight:700;letter-spacing:0.03em}
+.back-to-top{background:rgba(255,140,0,0.08);border:1px solid rgba(255,140,0,0.3);border-radius:5px;
+  color:var(--text-cream);opacity:0.7;font-family:'Nunito',sans-serif;font-weight:700;
+  font-size:clamp(1rem,3.5vw,1.25rem);letter-spacing:0.03em;white-space:nowrap;
+  padding:clamp(0.3rem,1vh,0.45rem) clamp(0.8rem,3vw,1.4rem);
+  cursor:pointer;transition:all 0.2s;min-height:44px;display:inline-flex;align-items:center}
+.back-to-top:hover{opacity:1;border-color:rgba(255,140,0,0.5)}
 
 /* Loading */
 .loading{text-align:center;padding:4rem 1rem;color:rgba(255,179,71,0.5);font-family:'Russo One',sans-serif;font-size:1rem}
@@ -158,7 +165,10 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;
     </button>
   </div>
   <div class="search-row">
-    <input type="text" id="search" placeholder="Search..." autocomplete="off">
+    <div class="search-wrap">
+      <input type="text" id="search" placeholder="Search..." autocomplete="off">
+      <button class="search-clear" id="searchClear" type="button">&times;</button>
+    </div>
     <button class="search-toggle" id="searchClose" title="Close">
       <svg viewBox="0 0 24 24" fill="none" stroke="url(#sg)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="10.5" cy="10.5" r="6.5"/><line x1="15.5" y1="15.5" x2="21" y2="21"/>
@@ -479,6 +489,9 @@ async function load(){
 document.getElementById('searchToggle').addEventListener('click',toggleSearch);
 document.getElementById('searchClose').addEventListener('click',toggleSearch);
 document.getElementById('search').addEventListener('input',updateView);
+document.getElementById('searchClear').addEventListener('click',function(){
+  document.getElementById('search').value='';updateView();document.getElementById('search').focus();
+});
 
 document.querySelectorAll('.sort-chip').forEach(function(chip){
   var arrow=document.createElement('span');

@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<title>Wieners & Losers — All High Scores</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=VT323&family=Russo+One&family=Google+Sans+Flex:wght@400;700;900&display=swap');
+html{font-size:16px!important;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --neon-orange:#ff8c00;--neon-amber:#ffb347;--neon-yellow:#ffd700;
+  --neon-red:#ff3333;--neon-green:#39ff14;
+  --bg:#0a0500;--text-cream:#ffe8b0;
+}
+body{background:var(--bg);color:var(--text-cream);font-family:'VT323',monospace;
+  min-height:100vh;overflow-y:auto;-webkit-overflow-scrolling:touch}
+body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;
+  background:linear-gradient(to right,rgba(255,140,0,0.07) 0%,transparent 8%),linear-gradient(to left,rgba(255,140,0,0.07) 0%,transparent 8%),
+    linear-gradient(to bottom,rgba(255,140,0,0.05) 0%,transparent 5%),linear-gradient(to top,rgba(255,140,0,0.05) 0%,transparent 5%);
+  pointer-events:none;z-index:9998}
+
+/* Header */
+.scroll-header{width:100%;text-align:center;padding:clamp(0.8rem,2vh,1.5rem) 1rem clamp(0.3rem,1vh,0.8rem);
+  background:linear-gradient(to bottom,rgba(10,5,0,0.99),rgba(10,5,0,0.85),transparent);
+  z-index:10;position:sticky;top:0}
+.scroll-header h2{font-family:'Russo One',sans-serif;font-size:clamp(1.8rem,7vw,3.2rem);
+  background:linear-gradient(180deg,#fff 0%,#ffd700 50%,#ff8c00 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  letter-spacing:0.06em}
+
+/* Light strip */
+.light-strip{height:3px;border-radius:2px;
+  background:linear-gradient(90deg,#ff3333,#ff8c00,#ffd700,#39ff14,#00fff7,#b347ff,#ff69b4,#ff3333);
+  background-size:200% 100%;animation:lightFlow 3s linear infinite;
+  mask-image:linear-gradient(90deg,transparent 0%,black 15%,black 85%,transparent 100%);
+  -webkit-mask-image:linear-gradient(90deg,transparent 0%,black 15%,black 85%,transparent 100%)}
+@keyframes lightFlow{0%{background-position:0% 0}100%{background-position:200% 0}}
+
+/* Score list */
+.scroll-track{width:100%;max-width:950px;margin:0 auto;padding:4px clamp(0.5rem,2vw,2rem) 3rem}
+
+.scroll-card{display:grid;grid-template-columns:1fr 1fr;gap:0;
+  padding:clamp(5px,0.8vh,10px) clamp(8px,1.5vw,16px);align-items:center;line-height:1.15;
+  border-bottom:1px solid rgba(255,140,0,0.08);position:relative}
+.scroll-card:nth-child(odd){background:rgba(255,140,0,0.015)}
+.scroll-card .card-left{display:flex;flex-direction:column;gap:0}
+.scroll-card .card-right{display:flex;flex-direction:column;align-items:flex-end;gap:0}
+
+.scroll-card .s-game{font-family:'Russo One',sans-serif;font-size:clamp(1.35rem,5.25vw,2.55rem);
+  color:var(--neon-yellow);text-shadow:0 0 5px rgba(255,215,0,0.2)}
+.scroll-card .s-score{font-family:'Google Sans Flex','Russo One',sans-serif;font-size:clamp(1.35rem,5.25vw,2.55rem);color:var(--neon-amber);
+  text-shadow:0 0 4px rgba(255,179,71,0.2);font-weight:bold}
+.scroll-card .s-player{font-family:'Google Sans Flex','Russo One',sans-serif;font-size:clamp(1.35rem,5.25vw,2.55rem);color:var(--neon-green);text-align:right;font-weight:bold;
+  text-shadow:0 0 6px rgba(57,255,20,0.25)}
+.scroll-card .s-date{font-family:'Google Sans Flex','Russo One',sans-serif;font-size:clamp(1.2rem,4.2vw,2.025rem);color:var(--neon-green);text-align:right;opacity:0.8;
+  text-shadow:0 0 4px rgba(57,255,20,0.2)}
+
+.score-row{display:flex;align-items:baseline;gap:0.4em;white-space:nowrap;overflow:hidden}
+.s-note{color:var(--neon-amber);font-family:'Google Sans Flex','Russo One',sans-serif;font-size:clamp(1.1rem,4.2vw,2.1rem);font-weight:bold;margin-left:calc(0.5em - 1px);
+  text-shadow:0 0 4px rgba(255,179,71,0.2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:1}
+
+/* Game header row */
+.scroll-card.special-row{grid-template-columns:1fr;padding-left:1.5em}
+
+/* Sub-entry rows */
+.scroll-card.special-sub-row{padding-left:1.8em;margin-top:-0.15em;margin-bottom:-0.15em;opacity:0.85}
+.scroll-card.special-sub-row .s-game{font-size:clamp(1.2rem,4.5vw,2.15rem)}
+.scroll-card.special-sub-row .s-score{font-size:clamp(1.28rem,4.8vw,2.3rem)}
+.scroll-card.special-sub-row .s-player{font-size:clamp(1.2rem,4.5vw,2.15rem)}
+.scroll-card.special-sub-row .s-date{font-size:clamp(1.05rem,3.75vw,1.85rem)}
+
+/* Note sub-rows */
+.scroll-card.special-sub-row .s-game.s-note{color:var(--neon-amber);font-family:'Google Sans Flex','Russo One',sans-serif;font-weight:bold}
+
+/* Footer */
+.scroll-footer{width:100%;text-align:center;padding:clamp(0.4rem,1vh,1rem);
+  background:linear-gradient(to top,rgba(10,5,0,0.99),rgba(10,5,0,0.85),transparent);
+  position:sticky;bottom:0;z-index:10}
+
+/* Status */
+.status{text-align:center;color:rgba(255,179,71,0.35);font-size:clamp(0.65rem,2vw,0.8rem);padding:0.5rem 0 1rem;font-family:'VT323',monospace}
+
+/* Loading */
+.loading{text-align:center;padding:4rem 1rem;color:rgba(255,179,71,0.5);font-family:'Russo One',sans-serif;font-size:1rem}
+</style>
+</head>
+<body>
+<div class="scroll-header">
+  <h2>ALL HIGH SCORES</h2>
+</div>
+<div class="scroll-track" id="list">
+  <div class="loading">Fetching scores...</div>
+</div>
+<div class="scroll-footer">
+  <div class="light-strip" style="width:50%;margin:0 auto"></div>
+</div>
+<div class="status" id="status"></div>
+
+<script>
+var SHEET_ID='1aJbyf25U_gPr5i_62RE9R0NcFu4tmGCquT8ELTle3O4';
+var _cbId=0;
+
+function fetchSheet(){
+  return new Promise(function(resolve,reject){
+    var cbId=_cbId++;
+    var cbName='_cb'+cbId;
+    var url='https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json;responseHandler:'+cbName+'&sheet=Scores&headers=1&_t='+Date.now();
+    var script=document.createElement('script');
+    var timeout=setTimeout(function(){cleanup();reject(new Error('Timeout'))},10000);
+    function cleanup(){clearTimeout(timeout);delete window[cbName];if(script.parentNode)script.remove()}
+    window[cbName]=function(data){
+      cleanup();
+      try{
+        if(data.status==='error'){reject(new Error('Sheet error'));return}
+        var table=data.table;
+        if(!table||!table.rows){reject(new Error('No data'));return}
+        var numCols=table.cols.length;
+        var rows=[];
+        for(var i=0;i<table.rows.length;i++){
+          var r=table.rows[i];
+          if(!r||!r.c){rows.push(new Array(numCols).fill(''));continue}
+          var row=[];
+          for(var ci=0;ci<numCols;ci++){
+            var cell=r.c[ci];
+            if(!cell||cell.v===null||cell.v===undefined){row.push('');continue}
+            var sv=String(cell.v);
+            var dm=sv.match(/^Date\((\d+),(\d+),(\d+)\)$/);
+            if(dm){row.push((parseInt(dm[2])+1)+'/'+parseInt(dm[3])+'/'+dm[1].slice(-2));continue}
+            if(cell.f){row.push(cell.f);continue}
+            row.push(sv);
+          }
+          rows.push(row);
+        }
+        resolve(rows);
+      }catch(e){reject(e)}
+    };
+    script.src=url;
+    script.onerror=function(){cleanup();reject(new Error('Network error'))};
+    document.head.appendChild(script);
+  });
+}
+
+function esc(s){var d=document.createElement('div');d.textContent=s;return d.innerHTML}
+
+function render(rows){
+  var scores=[];
+  var lastParent=null;
+  for(var i=0;i<rows.length;i++){
+    var r=rows[i];
+    if(!r[0]&&!r[1]&&!r[2])continue;
+    var game=(r[0]||'').trim(),score=(r[1]||'').trim(),player=(r[2]||'').trim(),date=(r[3]||'').trim(),note=(r[4]||'').trim();
+    if(game.startsWith('>')){
+      var label=game.substring(1).trim();
+      if(lastParent&&lastParent.special)lastParent.special.push({label:label,score:score,player:player,date:date});
+      continue;
+    }
+    var entry={game:game,score:score,player:player,date:date,note:note};
+    if(!score&&!player&&!date){entry.score='';entry.player='';entry.date='';entry.special=[];lastParent=entry}
+    else{lastParent=null}
+    scores.push(entry);
+  }
+
+  var html='';
+  scores.forEach(function(s){
+    if(s.special){
+      html+='<div class="scroll-card special-row"><div class="card-left"><span class="s-game">'+esc(s.game)+'</span></div></div>';
+      s.special.forEach(function(sp){
+        var dt=sp.date?esc(sp.date):'';
+        html+='<div class="scroll-card special-sub-row"><div class="card-left"><span class="s-game">'
+          +esc(sp.label)+'</span><span class="s-score">'+esc(sp.score)+'</span></div>'
+          +'<div class="card-right"><span class="s-player">'+esc(sp.player)+'</span>'
+          +(dt?'<span class="s-date">'+dt+'</span>':'')
+          +'</div></div>';
+      });
+      if(s.note){html+='<div class="scroll-card special-sub-row"><div class="card-left"><span class="s-game s-note">'+esc(s.note)+'</span></div><div class="card-right"></div></div>'}
+    } else {
+      var noteHtml=s.note?'<span class="s-note">'+esc(s.note)+'</span>':'';
+      html+='<div class="scroll-card"><div class="card-left"><span class="s-game">'+esc(s.game)+'</span>'
+        +'<div class="score-row"><span class="s-score">'+esc(s.score)+'</span>'+noteHtml+'</div></div>'
+        +'<div class="card-right"><span class="s-player">'+esc(s.player)+'</span>'
+        +'<span class="s-date">'+esc(s.date)+'</span></div></div>';
+    }
+  });
+
+  document.getElementById('list').innerHTML=html||'<div class="loading">No scores found</div>';
+  var now=new Date();
+  var h=now.getHours(),m=String(now.getMinutes()).padStart(2,'0');
+  var ampm=h>=12?'pm':'am';h=h%12||12;
+  document.getElementById('status').textContent='Updated '+h+':'+m+ampm+' \u2022 '+scores.length+' games';
+}
+
+async function load(){
+  try{
+    var rows=await fetchSheet();
+    render(rows);
+  }catch(e){
+    document.getElementById('status').textContent='Error: '+e.message;
+  }
+}
+
+load();
+setInterval(load,60000);
+</script>
+</body>
+</html>

@@ -39,7 +39,9 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;
 .search-toggle svg{width:clamp(1.2rem,4vw,1.6rem);height:clamp(1.2rem,4vw,1.6rem);display:block}
 
 /* Search row */
-.search-row{display:none;align-items:center;gap:0.5rem}
+.search-row{display:none;align-items:center;gap:0.5rem;
+  max-width:950px;margin-left:auto;margin-right:auto;
+  padding-left:clamp(0.5rem,2vw,2rem);padding-right:clamp(0.5rem,2vw,2rem)}
 .scroll-header.search-open .search-row{display:flex}
 .scroll-header.search-open .search-toggle{opacity:1}
 .search-row input{flex:1;min-width:0;background:rgba(255,140,0,0.1);border:1px solid rgba(255,140,0,0.35);
@@ -58,7 +60,9 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;
 
 /* Chips row */
 .chips-row{display:none;gap:clamp(0.5rem,2vw,0.8rem);padding-top:clamp(0.3rem,1vh,0.5rem);
-  justify-content:center;flex-wrap:wrap}
+  justify-content:center;flex-wrap:wrap;
+  max-width:950px;margin-left:auto;margin-right:auto;
+  padding-left:clamp(0.5rem,2vw,2rem);padding-right:clamp(0.5rem,2vw,2rem)}
 .scroll-header.search-open .chips-row{display:flex}
 .sort-chip{background:rgba(255,140,0,0.08);border:1px solid rgba(255,140,0,0.3);border-radius:5px;
   color:var(--text-cream);opacity:0.7;font-family:'Nunito',sans-serif;
@@ -68,7 +72,6 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;
 .sort-chip:hover{opacity:1;border-color:rgba(255,140,0,0.5)}
 .sort-chip.active{color:var(--neon-yellow);opacity:1;border-color:rgba(255,215,0,0.5);
   background:rgba(255,215,0,0.08);text-shadow:0 0 8px rgba(255,215,0,0.25)}
-.sort-chip .arrow{display:inline;margin-left:0.15em;font-size:0.85em}
 
 /* Light strip */
 .light-strip{height:3px;border-radius:2px;
@@ -79,7 +82,7 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;
 @keyframes lightFlow{0%{background-position:0% 0}100%{background-position:200% 0}}
 
 /* Score list */
-.scroll-track{width:100%;max-width:950px;margin:0 auto;padding:4px clamp(0.5rem,2vw,2rem) 3rem}
+.scroll-track{width:100%;max-width:950px;margin:0 auto;padding:4px clamp(0.5rem,2vw,2rem) clamp(0.4rem,1vh,1rem)}
 
 .scroll-card{display:grid;grid-template-columns:1fr 1fr;gap:0;
   padding:clamp(5px,0.8vh,10px) clamp(8px,1.5vw,16px);align-items:center;line-height:1.15;
@@ -115,14 +118,15 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;
 .scroll-card.special-sub-row .s-game.s-note{color:var(--neon-amber);font-family:'Google Sans Flex','Russo One',sans-serif;font-weight:bold}
 
 /* Footer */
-.scroll-footer{width:100%;text-align:center;padding:clamp(0.4rem,1vh,1rem);padding-top:clamp(1rem,3vh,2rem);
+.scroll-footer{width:100%;text-align:center;padding:clamp(0.4rem,1vh,1rem);
   background:linear-gradient(to top,rgba(10,5,0,0.99),rgba(10,5,0,0.85),transparent);
   position:sticky;bottom:0;z-index:10}
 
 .no-results{text-align:center;padding:2rem 1rem;color:rgba(255,179,71,0.35);font-family:'VT323',monospace;font-size:1rem}
 
 /* Player stats */
-.player-stats{display:none;max-width:600px;margin:clamp(1rem,3vh,2rem) auto;
+.player-stats{display:none;max-width:calc(950px - 2 * clamp(0.5rem,2vw,2rem) - 2 * clamp(8px,1.5vw,16px));
+  margin:0.8rem auto;
   padding:clamp(0.8rem,2vh,1.4rem) clamp(1rem,3vw,2rem);
   background:rgba(255,140,0,0.1);border:1px solid rgba(255,140,0,0.35);border-radius:8px}
 .player-stats.visible{display:block}
@@ -139,7 +143,7 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;
 
 /* Status */
 .status-bar{display:flex;align-items:center;justify-content:space-between;
-  max-width:950px;margin:0 auto;padding:0.5rem clamp(0.5rem,2vw,2rem) 1rem}
+  max-width:950px;margin:0 auto;padding:0.5rem calc(clamp(0.5rem,2vw,2rem) + clamp(8px,1.5vw,16px)) 1rem}
 .status{color:var(--text-cream);opacity:0.7;font-size:clamp(1rem,3.5vw,1.25rem);
   font-family:'Nunito',sans-serif;font-weight:700;letter-spacing:0.03em}
 .back-to-top{background:rgba(255,140,0,0.08);border:1px solid rgba(255,140,0,0.3);border-radius:5px;
@@ -471,7 +475,7 @@ function toggleSearch(){
     header.classList.remove('search-open');
     document.getElementById('search').value='';
     currentSort='default';
-    document.querySelectorAll('.sort-chip').forEach(function(c){c.classList.remove('active');c.querySelector('.arrow').textContent=''});
+    document.querySelectorAll('.sort-chip').forEach(function(c){c.classList.remove('active')});
     updateView();
   }
 }
@@ -494,10 +498,6 @@ document.getElementById('searchClear').addEventListener('click',function(){
 });
 
 document.querySelectorAll('.sort-chip').forEach(function(chip){
-  var arrow=document.createElement('span');
-  arrow.className='arrow';
-  chip.appendChild(arrow);
-
   chip.addEventListener('click',function(){
     var base=this.dataset.sort;
     var descFirst=this.dataset.defaultDir==='desc';
@@ -511,10 +511,8 @@ document.querySelectorAll('.sort-chip').forEach(function(chip){
       else currentSort=base;
     }
 
-    document.querySelectorAll('.sort-chip').forEach(function(c){c.classList.remove('active');c.querySelector('.arrow').textContent=''});
-    var ar=this.querySelector('.arrow');
-    if(currentSort===base){this.classList.add('active');ar.textContent=descFirst?'\u2193':'\u2191'}
-    else if(currentSort===base+'-asc'){this.classList.add('active');ar.textContent='\u2191'}
+    document.querySelectorAll('.sort-chip').forEach(function(c){c.classList.remove('active')});
+    if(currentSort===base||currentSort===base+'-asc'){this.classList.add('active')}
     updateView();
   });
 });

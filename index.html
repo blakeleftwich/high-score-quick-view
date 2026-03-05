@@ -123,7 +123,9 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;
 .no-results{text-align:center;padding:2rem 1rem;color:rgba(255,179,71,0.35);font-family:'VT323',monospace;font-size:1rem}
 
 /* Player stats */
-.player-stats{display:none;max-width:calc(950px - 2 * clamp(0.5rem,2vw,2rem) - 2 * clamp(8px,1.5vw,16px));
+.player-stats{display:none;
+  width:calc(100% - 2 * clamp(0.5rem,2vw,2rem) - 2 * clamp(8px,1.5vw,16px));
+  max-width:calc(950px - 2 * clamp(0.5rem,2vw,2rem) - 2 * clamp(8px,1.5vw,16px));
   margin:0.3rem auto 0.8rem;
   padding:clamp(0.8rem,2vh,1.4rem) clamp(1rem,3vw,2rem);
   background:rgba(255,140,0,0.1);border:1px solid rgba(255,140,0,0.35);border-radius:8px}
@@ -203,6 +205,8 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;
 </div>
 
 <script>
+if('scrollRestoration' in history)history.scrollRestoration='manual';
+window.scrollTo(0,0);
 var SHEET_ID='1aJbyf25U_gPr5i_62RE9R0NcFu4tmGCquT8ELTle3O4';
 var _cbId=0;
 var allScores=[];

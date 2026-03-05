@@ -26,7 +26,10 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;
   background:var(--bg);z-index:10;position:sticky;top:0}
 .scroll-header::after{content:'';position:absolute;left:0;right:0;bottom:0;height:clamp(0.8rem,2vh,1.5rem);
   background:linear-gradient(to bottom,var(--bg),transparent);transform:translateY(100%);pointer-events:none}
-.header-row{width:100%;display:flex;align-items:center;justify-content:center}
+
+/* Title row (default) */
+.title-row{display:flex;align-items:center;justify-content:center}
+.scroll-header.search-open .title-row{display:none}
 .scroll-header h2{font-family:'Russo One',sans-serif;font-size:clamp(1.8rem,7vw,3.2rem);
   background:linear-gradient(180deg,#fff 0%,#ffd700 50%,#ff8c00 100%);
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
@@ -36,29 +39,29 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;
 .search-toggle:hover,.search-toggle.active{opacity:1}
 .search-toggle svg{width:clamp(1.2rem,4vw,1.6rem);height:clamp(1.2rem,4vw,1.6rem);display:block}
 
-/* Search mode header */
-.header-row.search-active h2{display:none}
-.header-row.search-active .search-toggle{opacity:0.7}
-.header-search{display:none;align-items:center;flex:0 1 40%;min-width:0;margin-right:clamp(0.5rem,2vw,1rem)}
-.header-row.search-active .header-search{display:flex}
-.header-search input{flex:1;min-width:0;background:rgba(255,140,0,0.06);border:1px solid rgba(255,140,0,0.15);
-  border-radius:4px;color:var(--text-cream);font-family:'Nunito',sans-serif;font-size:clamp(1.5rem,5.5vw,2.2rem);
-  padding:0.15rem 0.5rem;outline:none;transition:border-color 0.2s;font-weight:700}
-.header-search input:focus{border-color:rgba(255,140,0,0.4)}
-.header-search input::placeholder{color:rgba(255,179,71,0.25);font-weight:400}
+/* Search row */
+.search-row{display:none;align-items:center;gap:0.5rem}
+.scroll-header.search-open .search-row{display:flex}
+.scroll-header.search-open .search-toggle{opacity:0.7}
+.search-row input{flex:1;min-width:0;background:rgba(255,140,0,0.1);border:1px solid rgba(255,140,0,0.35);
+  border-radius:999px;color:var(--text-cream);font-family:'Nunito',sans-serif;font-size:clamp(1.5rem,5.5vw,2.2rem);
+  padding:0.2rem 0.8rem;outline:none;transition:border-color 0.2s;font-weight:700}
+.search-row input:focus{border-color:rgba(255,179,71,0.6)}
+.search-row input::placeholder{color:rgba(255,179,71,0.4);font-weight:400}
 
-/* Sort chips */
-.sort-chip{background:none;border:1px solid rgba(255,140,0,0.12);border-radius:4px;
-  color:rgba(255,179,71,0.35);font-family:'Nunito',sans-serif;font-size:clamp(0.85rem,2.8vw,1.15rem);
-  padding:0.15rem clamp(0.3rem,1vw,0.5rem);cursor:pointer;transition:all 0.2s;
-  letter-spacing:0.03em;white-space:nowrap;font-weight:700;flex-shrink:0;display:none;
-  margin-right:clamp(0.3rem,1vw,0.5rem)}
-.header-row.search-active .sort-chip{display:inline-flex;align-items:center}
-.sort-chip:last-of-type{margin-right:clamp(0.5rem,2vw,1rem)}
-.sort-chip:hover{color:rgba(255,179,71,0.6);border-color:rgba(255,140,0,0.25)}
-.sort-chip.active{color:var(--neon-yellow);border-color:rgba(255,215,0,0.35);
-  text-shadow:0 0 6px rgba(255,215,0,0.2)}
-.sort-chip .arrow{display:inline;margin-left:0.1em;font-size:0.85em}
+/* Chips row */
+.chips-row{display:none;gap:clamp(0.5rem,2vw,0.8rem);padding-top:clamp(0.3rem,1vh,0.5rem);
+  justify-content:center;flex-wrap:wrap}
+.scroll-header.search-open .chips-row{display:flex}
+.sort-chip{background:rgba(255,140,0,0.08);border:1px solid rgba(255,140,0,0.3);border-radius:5px;
+  color:var(--text-cream);opacity:0.7;font-family:'Nunito',sans-serif;
+  font-size:clamp(1rem,3.5vw,1.25rem);font-weight:700;letter-spacing:0.03em;white-space:nowrap;
+  padding:clamp(0.3rem,1vh,0.45rem) clamp(0.8rem,3vw,1.4rem);
+  cursor:pointer;transition:all 0.2s;min-height:44px;display:inline-flex;align-items:center}
+.sort-chip:hover{opacity:1;border-color:rgba(255,140,0,0.5)}
+.sort-chip.active{color:var(--neon-yellow);opacity:1;border-color:rgba(255,215,0,0.5);
+  background:rgba(255,215,0,0.08);text-shadow:0 0 8px rgba(255,215,0,0.25)}
+.sort-chip .arrow{display:inline;margin-left:0.15em;font-size:0.85em}
 
 /* Light strip */
 .light-strip{height:3px;border-radius:2px;
@@ -111,31 +114,42 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;
 
 .no-results{text-align:center;padding:2rem 1rem;color:rgba(255,179,71,0.35);font-family:'VT323',monospace;font-size:1rem}
 
-/* Player count (shown below list for single-player searches) */
-.player-count{text-align:right;color:rgba(255,179,71,0.3);font-size:clamp(1.5rem,5vw,2.2rem);
-  padding:0.3rem clamp(0.5rem,2vw,2rem) 0;font-family:'Nunito',sans-serif;font-weight:400;
-  display:none;max-width:950px;margin:0 auto}
-.player-count.visible{display:block}
+/* Player stats */
+.player-stats{display:none;max-width:950px;margin:0.5rem auto 0;
+  padding:clamp(0.4rem,1vh,0.6rem) clamp(0.5rem,2vw,2rem);
+  background:rgba(255,140,0,0.1);border:1px solid rgba(255,140,0,0.35);border-radius:8px;
+  margin-left:clamp(0.5rem,2vw,2rem);margin-right:clamp(0.5rem,2vw,2rem)}
+.player-stats.visible{display:block}
+.player-stats .stat-name{font-family:'Google Sans Flex','Russo One',sans-serif;font-size:clamp(1.4rem,5.5vw,2.4rem);
+  color:var(--neon-green);text-shadow:0 0 6px rgba(57,255,20,0.2);font-weight:bold;
+  padding-bottom:0.2rem}
+.player-stats .stat-row{display:flex;justify-content:space-between;align-items:baseline;
+  padding:0.15rem 0;line-height:1.3}
+.player-stats .stat-label{font-family:'Google Sans Flex','Russo One',sans-serif;font-size:clamp(1rem,3.8vw,1.6rem);
+  color:var(--neon-yellow);text-shadow:0 0 4px rgba(255,215,0,0.15)}
+.player-stats .stat-value{font-family:'Google Sans Flex','Russo One',sans-serif;font-weight:bold;
+  font-size:clamp(1rem,3.8vw,1.6rem);color:var(--neon-amber);text-align:right;
+  text-shadow:0 0 4px rgba(255,179,71,0.2)}
 
 /* Status */
-.status{text-align:center;color:rgba(255,179,71,0.3);font-size:clamp(1.4rem,4.5vw,2rem);
-  padding:0.5rem 0 1rem;font-family:'Google Sans Flex',sans-serif;font-weight:400;letter-spacing:0.02em}
+.status-bar{display:flex;align-items:center;justify-content:space-between;
+  max-width:950px;margin:0 auto;padding:0.5rem clamp(0.5rem,2vw,2rem) 1rem}
+.status{color:rgba(255,179,71,0.3);font-size:clamp(1.4rem,4.5vw,2rem);
+  font-family:'Google Sans Flex',sans-serif;font-weight:400;letter-spacing:0.02em}
+.back-to-top{background:none;border:1px solid rgba(255,140,0,0.2);border-radius:4px;
+  color:rgba(255,179,71,0.3);font-family:'Google Sans Flex',sans-serif;font-weight:400;
+  font-size:clamp(1rem,3vw,1.2rem);padding:0.15rem 0.5rem;cursor:pointer;
+  transition:all 0.2s;white-space:nowrap}
+.back-to-top:hover{color:rgba(255,179,71,0.6);border-color:rgba(255,140,0,0.4)}
 
 /* Loading */
 .loading{text-align:center;padding:4rem 1rem;color:rgba(255,179,71,0.5);font-family:'Russo One',sans-serif;font-size:1rem}
 </style>
 </head>
 <body>
-<div class="scroll-header">
-  <div class="header-row" id="headerRow">
+<div class="scroll-header" id="scrollHeader">
+  <div class="title-row">
     <h2>ALL HIGH SCORES</h2>
-    <div class="header-search">
-      <input type="text" id="search" placeholder="Search..." autocomplete="off">
-    </div>
-    <button class="sort-chip" data-sort="game">GAME</button>
-    <button class="sort-chip" data-sort="player">PLAYER</button>
-    <button class="sort-chip" data-sort="date" data-default-dir="desc">DATE</button>
-    <button class="sort-chip" data-sort="score" data-default-dir="desc">SCORE</button>
     <button class="search-toggle" id="searchToggle" title="Search & Sort">
       <svg viewBox="0 0 24 24" fill="none" stroke="url(#sg)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
         <defs><linearGradient id="sg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#fff"/><stop offset="50%" stop-color="#ffd700"/><stop offset="100%" stop-color="#ff8c00"/></linearGradient></defs>
@@ -143,15 +157,37 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;
       </svg>
     </button>
   </div>
+  <div class="search-row">
+    <input type="text" id="search" placeholder="Search..." autocomplete="off">
+    <button class="search-toggle" id="searchClose" title="Close">
+      <svg viewBox="0 0 24 24" fill="none" stroke="url(#sg)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="10.5" cy="10.5" r="6.5"/><line x1="15.5" y1="15.5" x2="21" y2="21"/>
+      </svg>
+    </button>
+  </div>
+  <div class="chips-row">
+    <button class="sort-chip" data-sort="game">GAME</button>
+    <button class="sort-chip" data-sort="player">PLAYER</button>
+    <button class="sort-chip" data-sort="date" data-default-dir="desc">DATE</button>
+    <button class="sort-chip" data-sort="score" data-default-dir="desc">SCORE</button>
+  </div>
 </div>
 <div class="scroll-track" id="list">
   <div class="loading">Fetching scores...</div>
 </div>
-<div class="player-count" id="playerCount"></div>
+<div class="player-stats" id="playerStats">
+  <div class="stat-name" id="statName"></div>
+  <div class="stat-row"><span class="stat-label">High Scores</span><span class="stat-value" id="statScores"></span></div>
+  <div class="stat-row"><span class="stat-label">First Score</span><span class="stat-value" id="statFirst"></span></div>
+  <div class="stat-row"><span class="stat-label">On the Board</span><span class="stat-value" id="statDuration"></span></div>
+</div>
 <div class="scroll-footer">
   <div class="light-strip" style="width:50%;margin:0 auto"></div>
 </div>
-<div class="status" id="status"></div>
+<div class="status-bar">
+  <span class="status" id="status"></span>
+  <button class="back-to-top" id="backToTop">Back to Top</button>
+</div>
 
 <script>
 var SHEET_ID='1aJbyf25U_gPr5i_62RE9R0NcFu4tmGCquT8ELTle3O4';
@@ -333,47 +369,96 @@ function countScores(entry){
   return entry.score?1:0;
 }
 
+function getAllDates(entry){
+  var dates=[];
+  if(entry.date)dates.push(entry.date);
+  if(entry.special)entry.special.forEach(function(sp){if(sp.date)dates.push(sp.date)});
+  return dates;
+}
+
+function parseDateToObj(d){
+  if(!d)return null;
+  var parts=d.split('/');
+  if(parts.length<3)return null;
+  var m=parseInt(parts[0]),day=parseInt(parts[1]),y=parseInt(parts[2]);
+  if(y<100)y+=2000;
+  return new Date(y,m-1,day);
+}
+
+function formatDuration(firstDate){
+  var now=new Date();
+  var totalMs=now-firstDate;
+  var totalDays=Math.floor(totalMs/(1000*60*60*24));
+  var years=Math.floor(totalDays/365);
+  var days=totalDays%365;
+  if(years>0) return years+' year'+(years!==1?'s':'')+', '+days+' day'+(days!==1?'s':'');
+  return days+' day'+(days!==1?'s':'');
+}
+
+function getDisplayName(filtered){
+  for(var i=0;i<filtered.length;i++){
+    if(filtered[i].player)return filtered[i].player;
+    if(filtered[i].special){
+      for(var j=0;j<filtered[i].special.length;j++){
+        if(filtered[i].special[j].player)return filtered[i].special[j].player;
+      }
+    }
+  }
+  return '';
+}
+
 function updateView(){
   var query=document.getElementById('search').value;
   var filtered=filterAndSort(allScores,query,currentSort);
   renderList(filtered);
 
-  // Detect single player
-  var pcEl=document.getElementById('playerCount');
-  var allPlayers={};
+  // Detect single player and build stats
+  var statsEl=document.getElementById('playerStats');
+  var allPlayerMap={};
   var totalScores=0;
+  var allDates=[];
   filtered.forEach(function(e){
     var pl=getPlayers(e);
-    pl.forEach(function(p){allPlayers[p]=true});
+    pl.forEach(function(p){allPlayerMap[p]=true});
     totalScores+=countScores(e);
+    allDates=allDates.concat(getAllDates(e));
   });
-  var uniquePlayers=Object.keys(allPlayers);
+  var uniquePlayers=Object.keys(allPlayerMap);
   if(query&&uniquePlayers.length===1&&filtered.length>0){
-    var name=filtered[0].player||(filtered[0].special&&filtered[0].special.length?filtered[0].special[0].player:'');
-    pcEl.textContent=totalScores+' high score'+(totalScores!==1?'s':'');
-    pcEl.classList.add('visible');
+    var name=getDisplayName(filtered);
+    document.getElementById('statName').textContent=name;
+    document.getElementById('statScores').textContent=totalScores;
+
+    // Find earliest date
+    var earliest=null;
+    var earliestStr='';
+    allDates.forEach(function(d){
+      var dt=parseDateToObj(d);
+      if(dt&&(!earliest||dt<earliest)){earliest=dt;earliestStr=d}
+    });
+    document.getElementById('statFirst').textContent=earliestStr||'—';
+    document.getElementById('statDuration').textContent=earliest?formatDuration(earliest):'—';
+    statsEl.classList.add('visible');
   } else {
-    pcEl.classList.remove('visible');
+    statsEl.classList.remove('visible');
   }
 
   var now=new Date();
-  var h=now.getHours(),m=String(now.getMinutes()).padStart(2,'0');
+  var h=now.getHours(),mn=String(now.getMinutes()).padStart(2,'0');
   var ampm=h>=12?'pm':'am';h=h%12||12;
+  var mo=now.getMonth()+1,dy=now.getDate(),yr=String(now.getFullYear()).slice(-2);
   var countLabel=filtered.length===allScores.length?allScores.length+' scores':filtered.length+'/'+allScores.length+' scores';
-  document.getElementById('status').textContent='Updated '+h+':'+m+ampm+' \u2022 '+countLabel;
+  document.getElementById('status').textContent='Updated '+mo+'/'+dy+'/'+yr+' '+h+':'+mn+ampm+' \u2022 '+countLabel;
 }
 
 function toggleSearch(){
   searchOpen=!searchOpen;
-  var row=document.getElementById('headerRow');
-  var btn=document.getElementById('searchToggle');
+  var header=document.getElementById('scrollHeader');
   if(searchOpen){
-    row.classList.add('search-active');
-    btn.classList.add('active');
+    header.classList.add('search-open');
     document.getElementById('search').focus();
   } else {
-    row.classList.remove('search-active');
-    btn.classList.remove('active');
+    header.classList.remove('search-open');
     document.getElementById('search').value='';
     currentSort='default';
     document.querySelectorAll('.sort-chip').forEach(function(c){c.classList.remove('active');c.querySelector('.arrow').textContent=''});
@@ -392,6 +477,7 @@ async function load(){
 }
 
 document.getElementById('searchToggle').addEventListener('click',toggleSearch);
+document.getElementById('searchClose').addEventListener('click',toggleSearch);
 document.getElementById('search').addEventListener('input',updateView);
 
 document.querySelectorAll('.sort-chip').forEach(function(chip){
@@ -418,6 +504,10 @@ document.querySelectorAll('.sort-chip').forEach(function(chip){
     else if(currentSort===base+'-asc'){this.classList.add('active');ar.textContent='\u2191'}
     updateView();
   });
+});
+
+document.getElementById('backToTop').addEventListener('click',function(){
+  window.scrollTo({top:0,behavior:'smooth'});
 });
 
 load();
